@@ -8,6 +8,10 @@ android {
     namespace = "com.firstprog.pose_detection_mlkit"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.firstprog.pose_detection_mlkit"
         minSdk = 24

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -16,6 +17,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.firstprog.pose_detection_mlkit.R
+import com.firstprog.pose_detection_mlkit.databinding.ActivityMainBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
@@ -24,14 +26,14 @@ import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var previewView: PreviewView
+    private lateinit var binding: ActivityMainBinding
     private val CAMERA_PERMISSION_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        previewView = findViewById(R.id.previewView)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         checkCameraPermission()
     }
@@ -64,17 +66,13 @@ class MainActivity : AppCompatActivity() {
 
             // Preview
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+                it.surfaceProvider = binding.previewView.surfaceProvider
             }
 
-            // Select back camera
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, createImageAnalysis()
                 )
@@ -121,13 +119,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun processPose(pose: Pose) {
+        val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
+
+        val left_eye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
+        val left_eye_inner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
+        val left_eye_outer = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
+
+        val right_eye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
+        val right_eye_inner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
+        val right_eye_outer = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
+
         val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
         val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
 
-        if (leftShoulder != null && rightShoulder != null) {
-            // Example: Log the positions of the shoulders
+        if(leftShoulder != null && rightShoulder != null) {
             Log.d("PoseDetection", "Left Shoulder: ${leftShoulder.position}")
             Log.d("PoseDetection", "Right Shoulder: ${rightShoulder.position}")
         }
     }
 }
+    

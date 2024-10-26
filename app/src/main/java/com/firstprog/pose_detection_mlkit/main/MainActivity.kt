@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.firstprog.pose_detection_mlkit.R
 import com.firstprog.pose_detection_mlkit.databinding.ActivityMainBinding
+import com.firstprog.pose_detection_mlkit.main.exceptions.PoseLandMarkNullException
+import com.firstprog.pose_detection_mlkit.main.exceptions.PoseLandmarkException
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
@@ -119,22 +121,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun processPose(pose: Pose) {
-        val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
+        val landmarks = pose.allPoseLandmarks
 
-        val left_eye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
-        val left_eye_inner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
-        val left_eye_outer = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
+        if(landmarks == null) {
+            Log.d("PoseDetection", "$landmarks")
 
-        val right_eye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
-        val right_eye_inner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
-        val right_eye_outer = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
-
-        val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
-        val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
-
-        if(leftShoulder != null && rightShoulder != null) {
-            Log.d("PoseDetection", "Left Shoulder: ${leftShoulder.position}")
-            Log.d("PoseDetection", "Right Shoulder: ${rightShoulder.position}")
+            throw PoseLandMarkNullException(
+                landmarks,
+                message = "Pose Landmark is NULL"
+            )
         }
     }
 }

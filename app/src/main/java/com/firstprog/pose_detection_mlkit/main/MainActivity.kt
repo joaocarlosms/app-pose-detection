@@ -29,36 +29,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout)
+        setContentView(R.layout.activity_main)
 
         previewView = findViewById(R.id.previewView)
 
-        // Verifique a permissão da câmera
         checkCameraPermission()
     }
 
-    // Método para verificar e solicitar permissão de câmera
     private fun checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED) {
-            // Permissão já concedida, inicie a câmera
             startCamera()
         } else {
-            // Solicite a permissão
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
         }
     }
 
-    // Callback quando o usuário responde à solicitação de permissão
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permissão foi concedida
                 startCamera()
             } else {
-                // Permissão negada
                 Toast.makeText(this, "Permissão de câmera necessária", Toast.LENGTH_SHORT).show()
             }
         }
@@ -128,7 +121,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun processPose(pose: Pose) {
-        // Here you can extract key points from the pose and handle them
         val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
         val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
 

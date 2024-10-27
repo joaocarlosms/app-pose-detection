@@ -12,4 +12,9 @@
         android:layout_height="match_parent"
         tools:ignore="MissingClass" />
 
+    <com.firstprog.pose_detection_mlkit.main.ViewModel.PoseOverlayView
+        android:id="@+id/overlayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

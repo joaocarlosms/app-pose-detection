@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.firstprog.pose_detection_mlkit.R
 import com.firstprog.pose_detection_mlkit.databinding.ActivityMainBinding
+import com.firstprog.pose_detection_mlkit.main.ViewModel.PoseOverlayView
 import com.firstprog.pose_detection_mlkit.main.exceptions.PoseLandMarkNullException
 import com.firstprog.pose_detection_mlkit.main.exceptions.PoseLandmarkException
 import com.google.mlkit.vision.common.InputImage
@@ -30,12 +31,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val CAMERA_PERMISSION_CODE = 100
+    private lateinit var overlayView: PoseOverlayView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        overlayView = binding.overlayView
 
         checkCameraPermission()
     }
@@ -124,10 +129,11 @@ class MainActivity : AppCompatActivity() {
         val landmarks = pose.allPoseLandmarks
 
         if(landmarks.isEmpty()) {
-            throw PoseLandMarkNullException(
-                landmarks,
-                message = "Pose Landmark is NULL"
-            )
+            overlayView.setPoseLandmarks(landmarks)
+//            throw PoseLandMarkNullException(
+//                landmarks,
+//                message = "Pose Landmark is NULL"
+//            )
         }
 
         Log.d("PoseDetection", "$landmarks")

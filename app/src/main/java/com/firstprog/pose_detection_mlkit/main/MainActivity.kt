@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 it.surfaceProvider = binding.previewView.surfaceProvider
             }
 
-            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
@@ -123,13 +123,13 @@ class MainActivity : AppCompatActivity() {
     private fun processPose(pose: Pose) {
         val landmarks = pose.allPoseLandmarks
 
-        if(landmarks == null) {
-            Log.d("PoseDetection", "$landmarks")
-
+        if(landmarks.isEmpty()) {
             throw PoseLandMarkNullException(
                 landmarks,
                 message = "Pose Landmark is NULL"
             )
         }
+
+        Log.d("PoseDetection", "$landmarks")
     }
 }

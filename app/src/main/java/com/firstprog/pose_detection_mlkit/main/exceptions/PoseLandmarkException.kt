@@ -4,6 +4,6 @@ import com.google.mlkit.vision.pose.Pose
 
 class PoseLandmarkException(message: String): RuntimeException(message)
 
-class PoseLandMarkNullException(pose: Pose, message: String): IllegalStateException(
-    "$message - ${pose.allPoseLandmarks}"
+class PoseLandMarkNullException(pose: MutableList<Pose>, message: String): IllegalStateException(
+    "$message - $pose"
 )
